@@ -68,6 +68,19 @@ def main():
     elif args.modality in ['Flow', 'RGBDiff']:
         data_length = 5
 
+    """test code"""
+    data, label = TSNDataSet("", args.train_list, num_segments=args.num_segments,
+                   new_length=data_length,
+                   modality=args.modality,
+                   image_tmpl="image_{:05d}.jpg" if args.modality in ["RGB", "RGBDiff"] else args.flow_prefix+"{}_{:05d}.jpg",
+                   transform=torchvision.transforms.Compose([
+                       train_augmentation,
+                       Stack(roll=args.arch == 'BNInception'),
+                       ToTorchFormatTensor(div=args.arch != 'BNInception'),
+                       normalize,
+                   ]))
+    print(data,label)
+    exit()
     train_loader = torch.utils.data.DataLoader(
         TSNDataSet("", args.train_list, num_segments=args.num_segments,
                    new_length=data_length,
