@@ -17,7 +17,7 @@ class FrameRecord(object):
 
     @property
     def path(self):
-        return "/".join(self._data[0].split('/')[3:]).replace(".mp4","")    #dataset_name/video_name/imgage_name.jpg
+        return "/".join(self._data[0].split('/')[3:])    #dataset_name/video_name/imgage_name.jpg
     @property
     def video_name(self):
         return self._data[0].split('/')[-2]
@@ -114,28 +114,3 @@ class TSNDataSet_frame(object):
 
     def __len__(self):
         return len(self.video_list)
-if __name__ == '__main__':
-    root_path = "/workspace/run/ActivityNet/data"
-    listfile = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
-
-    test = TSNDataSet_frame(root_path=root_path,list_file=listfile,num_segments=3,
-                            new_length=1,modality="RGB",transform=torchvision.transforms.Compose([
-                       train_augmentation,
-                       Stack(roll=args.arch == 'BNInception'),
-                       ToTorchFormatTensor(div=args.arch != 'BNInception'),
-                       normalize,
-                   ]))
-    """
-    TSNDataSet("", args.train_list, num_segments=args.num_segments,
-                   new_length=data_length,
-                   modality=args.modality,
-                   image_tmpl="image_{:05d}.jpg" if args.modality in ["RGB", "RGBDiff"] else args.flow_prefix+"{}_{:05d}.jpg",
-                   transform=torchvision.transforms.Compose([
-                       train_augmentation,
-                       Stack(roll=args.arch == 'BNInception'),
-                       ToTorchFormatTensor(div=args.arch != 'BNInception'),
-                       normalize,
-                   ])
-    """
-    data,label = test.__getitem__(index=10)
-    print(data,label)
