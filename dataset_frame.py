@@ -17,7 +17,7 @@ class FrameRecord(object):
 
     @property
     def path(self):
-        return "/".join(self._data[0].split('/')[3:])    #dataset_name/video_name/imgage_name.jpg
+        return "/".join(self._data[0].split('/')[-2:])    #video_name/imgage_name.jpg
     @property
     def video_name(self):
         return self._data[0].split('/')[-2]
