@@ -70,12 +70,9 @@ def main():
         data_length = 5
 
     """test code"""
-    root_path = "/workspace/run/ActivityNet/data"
-    listfile_train = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
-    listfile_val = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
 
     train_loader = torch.utils.data.DataLoader(
-        TSNDataSet_frame(root_path=root_path, list_file=listfile_train, num_segments=3,
+        TSNDataSet_frame(root_path=args.root_path, list_file=args.train_list, num_segments=3,
                          new_length=1, modality="RGB", transform=torchvision.transforms.Compose([
                 train_augmentation,
                 Stack(roll=args.arch == 'BNInception'),
@@ -86,7 +83,7 @@ def main():
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        TSNDataSet_frame(root_path=root_path, list_file=listfile_val, num_segments=args.num_segments,
+        TSNDataSet_frame(root_path=args.root_path, list_file=args.val_list, num_segments=args.num_segments,
                    new_length=data_length,
                    modality=args.modality,
                    transform=torchvision.transforms.Compose([

@@ -1,15 +1,18 @@
 import random
 import os
-father_dir = "/Users/eric/Documents/"
-video_level_list_file = 'ucf101_rgb_train_split_1.txt'
-frame_level_list_file = 'ucf101_rgb_train_split_1_frame.txt'
+from opts import parser
+args = parser.parse_args()
+
+father_dir = ""
+video_level_list_file = args.video_level_list
+frame_level_list_file = video_level_list_file.replace(".txt","_frame.txt")
 train_data = 'RGB'
 bucket_domain = 'http://oy1v528iz.bkt.clouddn.com/'
 name_pattern = {'RGB': 'UCF-frames/{video_name}/{idx}.jpg',
                 'FLOW':'UCF-frames/{video_name}/image_{idx:05d}.jpg'}
-num_segment = 3
-num_length = 1
-num_epoch = 10
+num_segment = args.num_segments
+num_length = args.new_length
+num_epoch = args.epochs
 
 def parse_video_level_list(input_file):
     video_info = []
@@ -28,7 +31,7 @@ def generate_frame_info(video_info, shuffle=True):
     for video_path, video_duration, label in video_info:
         avg_duration = video_duration // num_segment
         for i in range(num_segment):
-            frame_rng = random.randint(i * avg_duration, min((i + 1) * avg_duration - num_length + 1,
+            frame_rng = random.randint(i * avg_duration+1, min((i + 1) * avg_duration - num_length + 1,
                                                              video_duration - 1) - num_length + 1)
             for j in range(num_length):
                 if train_data == 'RGB':

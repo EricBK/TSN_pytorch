@@ -4,6 +4,7 @@ parser.add_argument('dataset', type=str, choices=['ucf101', 'hmdb51', 'kinetics'
 parser.add_argument('modality', type=str, choices=['RGB', 'Flow', 'RGBDiff'])
 parser.add_argument('train_list', type=str)
 parser.add_argument('val_list', type=str)
+parser.add_argument('--root_path',type=str,default="")      # frames dir
 
 # ========================= Model Configs ==========================
 parser.add_argument('--arch', type=str, default="resnet101")
@@ -54,10 +55,12 @@ parser.add_argument('--start-epoch', default=0, type=int, metavar='N',
 parser.add_argument('--gpus', nargs='+', type=int, default=None)
 parser.add_argument('--flow_prefix', default="", type=str)
 
-
-
-
-
-
+# ========================= Frame Level List Generation Configs ==========================
+parser.add_argument('--video_level_list',type=str,
+                    help="path of video_level_file_list")
+parser.add_argument('--new_length', '-p', default=1, type=int,
+                    metavar='N', help='num of segments in one segment (default: 1)')
+parser.add_argument('--eval-freq', '-ef', default=5, type=int,
+                    metavar='N', help='evaluation frequency (default: 5)')
 
 
