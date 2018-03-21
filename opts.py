@@ -58,9 +58,7 @@ parser.add_argument('--flow_prefix', default="", type=str)
 # ========================= Frame Level List Generation Configs ==========================
 parser.add_argument('--video_level_list',type=str,
                     help="path of video_level_file_list")
-parser.add_argument('--new_length', '-p', default=1, type=int,
+parser.add_argument('--new_length', '-nl', default=1, type=int,
                     metavar='N', help='num of segments in one segment (default: 1)')
-parser.add_argument('--eval-freq', '-ef', default=5, type=int,
-                    metavar='N', help='evaluation frequency (default: 5)')
 
 
