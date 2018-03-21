@@ -10,6 +10,7 @@ import torch.optim
 from torch.nn.utils import clip_grad_norm
 
 from dataset import TSNDataSet
+from dataset_frame import TSNDataSet_frame
 from models import TSN
 from transforms import *
 from opts import parser
@@ -69,38 +70,25 @@ def main():
         data_length = 5
 
     """test code"""
-    data, label = TSNDataSet("", args.train_list, num_segments=args.num_segments,
-                   new_length=data_length,
-                   modality=args.modality,
-                   image_tmpl="image_{:05d}.jpg" if args.modality in ["RGB", "RGBDiff"] else args.flow_prefix+"{}_{:05d}.jpg",
-                   transform=torchvision.transforms.Compose([
-                       train_augmentation,
-                       Stack(roll=args.arch == 'BNInception'),
-                       ToTorchFormatTensor(div=args.arch != 'BNInception'),
-                       normalize,
-                   ]))
-    print(data,label)
-    exit()
+    root_path = "/workspace/run/ActivityNet/data"
+    listfile_train = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
+    listfile_val = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
+
     train_loader = torch.utils.data.DataLoader(
-        TSNDataSet("", args.train_list, num_segments=args.num_segments,
-                   new_length=data_length,
-                   modality=args.modality,
-                   image_tmpl="image_{:05d}.jpg" if args.modality in ["RGB", "RGBDiff"] else args.flow_prefix+"{}_{:05d}.jpg",
-                   transform=torchvision.transforms.Compose([
-                       train_augmentation,
-                       Stack(roll=args.arch == 'BNInception'),
-                       ToTorchFormatTensor(div=args.arch != 'BNInception'),
-                       normalize,
-                   ])),
+        TSNDataSet_frame(root_path=root_path, list_file=listfile_train, num_segments=3,
+                         new_length=1, modality="RGB", transform=torchvision.transforms.Compose([
+                train_augmentation,
+                Stack(roll=args.arch == 'BNInception'),
+                ToTorchFormatTensor(div=args.arch != 'BNInception'),
+                normalize,
+            ])),
         batch_size=args.batch_size, shuffle=True,
         num_workers=args.workers, pin_memory=True)
 
     val_loader = torch.utils.data.DataLoader(
-        TSNDataSet("", args.val_list, num_segments=args.num_segments,
+        TSNDataSet_frame(root_path=root_path, list_file=listfile_val, num_segments=args.num_segments,
                    new_length=data_length,
                    modality=args.modality,
-                   image_tmpl="image_{:05d}.jpg" if args.modality in ["RGB", "RGBDiff"] else args.flow_prefix+"{}_{:05d}.jpg",
-                   random_shift=False,
                    transform=torchvision.transforms.Compose([
                        GroupScale(int(scale_size)),
                        GroupCenterCrop(crop_size),

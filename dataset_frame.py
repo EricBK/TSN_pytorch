@@ -5,7 +5,8 @@ import os
 import os.path
 import numpy as np
 from numpy.random import randint
-
+import torchvision
+from models import TSN
 class FrameRecord(object):
     def __init__(self, row):
         """
@@ -45,7 +46,7 @@ class TSNDataSet_frame(object):
         self.video_list = self._parse_frame_list()
 
     def _load_image(self, img_path):
-        img_path = os.path.join(root_path,img_path)
+        img_path = os.path.join(self.root_path,img_path)
         if self.modality == 'RGB' or self.modality == 'RGBDiff':
             try:
                 return [Image.open(img_path).convert('RGB')]
@@ -102,7 +103,7 @@ class TSNDataSet_frame(object):
         images = list()
         for image_path in record[:-1]:
             image = self._load_image(image_path)
-            images.append(image)
+            images.extend(image)
         while None in images:
             return self.get(index+1)
         if self.transform:
@@ -116,6 +117,7 @@ class TSNDataSet_frame(object):
 if __name__ == '__main__':
     root_path = "/workspace/run/ActivityNet/data"
     listfile = "/workspace/run/ActivityNet/data/ucf101_rgb_train_split_1_frame.txt"
+
     test = TSNDataSet_frame(root_path=root_path,list_file=listfile,num_segments=3,
                             new_length=1,modality="RGB",transform=torchvision.transforms.Compose([
                        train_augmentation,
