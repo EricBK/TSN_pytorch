@@ -49,7 +49,7 @@ def get_video_frames_from_bucket(bucket="video-data", prefix="UCF-frames/", des_
     if os.path.exists(des_file):return
     try:
         print("listing {bucket} info...".format(bucket=bucket))
-        #os.system("qshell listbucket {bucket} {prefix} {des_file}".format(bucket=bucket,prefix=prefix,des_file=temp_file"))
+        os.system("qshell listbucket {bucket} {prefix} {des_file}".format(bucket=bucket,prefix=prefix,des_file=temp_file"))
     except:
         print("command error")
     finally:
